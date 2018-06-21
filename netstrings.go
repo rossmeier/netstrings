@@ -31,13 +31,9 @@ func (r *Reader) ReadNetstring() ([]byte, error) {
 		return nil, err
 	}
 	ret := make([]byte, l)
-	rd := ret
-	for len(rd) > 0 {
-		n, err := r.r.Read(rd)
-		rd = rd[n:]
-		if err != nil {
-			return nil, err
-		}
+	_, err = io.ReadFull(r.r, ret)
+	if err != nil {
+		return nil, err
 	}
 	next, err := r.r.ReadByte()
 	if err != nil && err != io.EOF {
